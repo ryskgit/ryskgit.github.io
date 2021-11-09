@@ -1,6 +1,6 @@
 name: "my-website"
 navbar: 
-  title: "MSDS Projects"
+  title: "My Projects"
   left: 
     - text: "About Me"
       href: index.html
