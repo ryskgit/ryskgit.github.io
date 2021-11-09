@@ -1,0 +1,15 @@
+---
+title: "MSDS Github Website"
+author: "Richard"
+date: "11/8/2021"
+output: html_document
+---
+
+# About Me
+## Name: Richard Kim
+### Born: Los Angeles, California
+### Hobbies: Writing Poems, Drawing, Sleight of Hand
+### Work: Data Analyst at The Center for Integrative Counseling and Psychology
+### School: Online MSDS Program at SMU
+
+#### **Check out the other tabs to see my completed projects for the MSDS program**

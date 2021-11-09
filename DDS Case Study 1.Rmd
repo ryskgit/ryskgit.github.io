@@ -1,0 +1,447 @@
+---
+title: "DDS Project 1"
+author: "Richard and Joaquin"
+date: "10/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<div style="margin-bottom:50px;">
+</div>
+
+## **Introduction**
+
+<div style="margin-bottom:20px;">
+</div>
+
+##### **The purpose of this project is to investigate the alcohol by volume (ABV) and international bitterness unit (IBU) values of a variety of beers. Further, we build on our findings regarding ABV and IBU to deliver insights on any differences between IPAs and other types of ales. We also explore the data to provide additional findings on how IPAs and other types of ales are distributed across the US.** 
+
+<div style="margin-bottom:50px;">
+</div>
+
+## **Setting up**
+
+### *Loading necessary libraries*
+
+```{r warnings = FALSE}
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(ggthemes)
+library(scales)
+library(maps)
+library(class) #knn
+library(e1071) #naive-bayes
+library(caret) #confusion matrix
+```
+
+### *Reading in the data*
+
+```{r echo=TRUE}
+# We read the data into two different dataframes. Please make sure to modify the directories accordingly. 
+Beers <- read.csv("D:\\Shared Lenovo\\Data Science\\Semester 1\\Doing Data Science\\Unit 8+9 - DDS Project\\Beers.csv")
+
+Breweries <- read.csv("D:\\Shared Lenovo\\Data Science\\Semester 1\\Doing Data Science\\Unit 8+9 - DDS Project\\Breweries.csv")
+```
+
+<div style="margin-bottom:100px;">
+</div>
+
+## **Main Questions of Interest**
+
+### *Question of Interest 1*
+##### How many breweries were in each state?
+```{r Q1}
+# We pipe the Breweries dataframe in, group calculations by State, and get an aggregate count using n(). 
+Breweries %>% 
+  count(State) %>% 
+  head()
+
+# We plot this into a bar chart to provide a visual.
+Breweries %>% 
+  count(State) %>% 
+  mutate(State = factor(State,
+                        levels = State[order(n, decreasing = FALSE)])) %>%
+  ggplot(aes(x = State, y = n, alpha = n)) + 
+  geom_bar(stat = 'identity', fill = 'steelblue') + 
+  labs(y = 'Count', alpha = 'Count') + 
+  ggtitle('Breweries by State') + 
+  coord_flip()
+```
+
+<div style="margin-bottom:100px;">
+</div>
+
+### *Question of Interest 2*
+##### Merge the data and print the first and last six observations. 
+```{r Q2}
+# We conduct a full/outer join to merge the two dataframes, matching based on the brewery IDs from both data frames.
+BrewBeer <- full_join(Beers, Breweries, by = c('Brewery_id'='Brew_ID'))
+```
+
+```{r}
+# We use head() and tail() to specify the top and bottom six observations of the merged dataframe. 
+head(BrewBeer, 6)
+tail(BrewBeer, 6)
+```
+
+<div style="margin-bottom:100px;">
+</div>
+
+### *Question of Interest 3*
+##### Address missing values.
+```{r Q3}
+# We remove any observations that have NA for any variable.
+BrewClean <- BrewBeer %>% na.omit()
+```
+
+<div style="margin-bottom:100px;">
+</div>
+
+### *Question of Interest 4*
+##### What is the median ABV and IBU for each state? Provide a bar chart. 
+```{r Q4}
+# We pipe the cleaned dataframe in, group calculations by state, and retrieve the median ABV and median IBU for each state.
+MedBrew <- BrewClean %>% 
+  group_by(State) %>% 
+  summarize(MedianABV = median(ABV),
+            MedianIBU = median(IBU))
+```
+
+```{r}
+# We first convert the State variable into a factor, determining levels to be the states ordered by median ABV in descending order. 
+# We then continue piping the converted dataframe into ggplot() to plot the ordered dataframe. 
+MedBrew %>% 
+  mutate(State = factor(State,
+                        levels = State[order(MedianABV, decreasing = FALSE)])) %>%
+  ggplot(aes(x = State, y = percent(MedianABV,accuracy = 0.1), fill = State, alpha = MedianABV)) + 
+  geom_bar(stat = 'identity', fill = 'red3') + 
+  labs(y = 'Alcohol by Volume', alpha = 'Median ABV') +
+  ggtitle("Median ABV by State") + 
+  theme_classic() +
+  theme(legend.position = "none") +
+  coord_flip()
+```
+
+```{r}
+# We conduct the same conversion to the State variable but with median IBU. 
+# As above, we pipe in the dataframe and plot using ggplot(). 
+MedBrew %>% 
+  mutate(State = factor(State,
+                        levels = State[order(MedianIBU, decreasing = FALSE)])) %>%
+  ggplot(aes(x = State, y = MedianIBU, fill = State, alpha = MedianIBU)) + 
+  geom_bar(stat = 'identity', fill = 'green4') +
+  labs(y = 'International Bitterness Units', alpha = 'Median IBU') + 
+  ggtitle("Median IBU by State") + 
+  theme_classic() + 
+  theme(legend.position = "none") +
+  coord_flip()
+```
+
+<div style="margin-bottom:100px;">
+</div>
+
+### *Question of Interest 5*
+##### Which state has the max ABV and which has the highest IBU?
+```{r Q5}
+# We use grep() to identify the index where the maximum ABV/IBU values are placed. 
+# We then pull the State value that is placed in that index. 
+BrewClean$State[grep(max(BrewClean$ABV),BrewClean$ABV)]
+BrewClean$State[grep(max(BrewClean$IBU),BrewClean$IBU)]
+```
+
+```{r}
+# We also conduct a check by sorting the dataframe and looking at the top values ourselves. 
+# We filter the variables to ABV, IBU, and State only for easier viewing.
+BrewClean %>% arrange(desc(ABV)) %>% dplyr::select(ABV, IBU, State) %>% head(3)
+BrewClean %>% arrange(desc(IBU)) %>% dplyr::select(ABV, IBU, State) %>% head(3)
+```
+
+<div style="margin-bottom:100px;">
+</div>
+
+### *Question of Interest 6*
+##### What are the summary statistics and distribution of ABV?
+```{r Q6}
+# We look at the summary statistics for the dataframe. 
+summary(BrewClean)
+```
+
+```{r}
+# We use ggplot() to retrieve a histogram of the ABV distribution. 
+BrewClean %>% 
+  ggplot(aes(x = ABV)) + 
+  geom_histogram(bins = 50, color = 'black', fill = 'steelblue3') + 
+  labs(y = 'Count') +
+  ggtitle("Distribution ABV Levels") + 
+  theme_minimal()
+```
+
+```{r}
+# We also provide a boxplot. 
+BrewClean %>% 
+  ggplot(aes(x = ABV)) + 
+  geom_boxplot(width = 0.5, fill = 'steelblue') + 
+  #coord_cartesian(xlim=c(-0.5,0.5)) + 
+  ggtitle('Distribution of ABV') + 
+  theme_minimal()
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+##### **The ABV variable has a right-skewed distribution, which would imply that more than half of the values fall below the mean 5.99%. We also see that the mean is larger than the median, which implies a right-skewed distribution. However, the summary statistics and histogram show us that the skewness is likely due to the upper outliers in the dataset. This is also apparent when we see the additional boxplot provided.** 
+
+<div style="margin-bottom:100px;">
+</div>
+
+### *Question of Interest 7*
+##### Is there a relation between IBU and ABV? 
+```{r Q7}
+# We use ggplot() to retrieve a scatterplot of the relation between ABV and IBU. 
+BrewClean %>% 
+  ggplot(aes(x = ABV, y = IBU)) + 
+  geom_point() + 
+  geom_smooth(method = 'lm') +
+  ggtitle("ABV x IBU Levels") + 
+  theme_pander()
+```
+
+```{r}
+# We also run a correlation to obtain Pearson's r and quantify the strength of this relation.
+cor(BrewClean$ABV, BrewClean$IBU, method = 'pearson')
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+##### **Based on the generated scatterplot and Pearson's r at 0.67, we know that ABV and IBU have a medium to high positive correlation. This means that higher values of ABV are associated with higher values of IBU and that lower values of ABV are associated with lower values of IBU.**
+
+<div style="margin-bottom:20px;">
+</div>
+
+##### **Please note that, although we observe a strong association between the two variables, we are not making any claims about the direction of the effect.**
+
+<div style="margin-bottom:100px;">
+</div>
+
+### *Question of Interest 8*
+##### Investigate the difference between IPAs and other Ales based on ABV and IBU. 
+```{r Q8}
+# We create a new variable identifying beers as IPA or Ale and remove anything else.
+# We also remove extra spaces in the State variable to aid in steps to come.
+Ales <- BrewClean %>% 
+  mutate(BeerType = ifelse(grepl('IPA',Style),'IPA',
+                           ifelse(grepl('Ale',Style),'Ale','Neither')),
+         State = str_replace_all(State,'\\s+','')) %>% 
+  filter(BeerType != 'Neither')
+```
+
+```{r}
+# We run an external KNN classification model using 70% of the data for training and 30% for testing.
+set.seed(50)
+trainIndices = sample(1:dim(Ales)[1],round(0.7 * dim(Ales)[1]))
+train = Ales[trainIndices,]
+test = Ales[-trainIndices,]
+model <- knn(train[,c('ABV','IBU')],test[,c('ABV','IBU')],train$BeerType, prob = TRUE, k = 3)
+confusionMatrix(table(model,test$BeerType))
+
+iterations = 50
+numks = 30
+masterAcc = matrix(nrow = iterations, ncol = numks)
+
+for(j in 1:iterations) {
+  accs = data.frame(accuracy = numeric(30), k = numeric(30))
+  trainIndices = sample(1:dim(Ales)[1],round(0.7 * dim(Ales)[1]))
+  train = Ales[trainIndices,]
+  test = Ales[-trainIndices,]
+  for(i in 1:numks) {
+    classifications = knn(train[,c('ABV','IBU')],test[,c('ABV','IBU')],train$BeerType, prob = TRUE, k = i)
+    table(classifications,test$BeerType)
+    CM = confusionMatrix(table(classifications,test$BeerType))
+    masterAcc[j,i] = CM$overall[1]
+  }
+}
+
+MeanAcc = colMeans(masterAcc)
+plot(seq(1,numks,1),MeanAcc, type = "l")
+
+which.max(MeanAcc) # Which inumks is max?
+max(MeanAcc)
+
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+##### **Although we checked accuracy based on multiple iterations, we report on a single run using a specific seed for reproducibility.** 
+
+<div style="margin-bottom:20px;">
+</div>
+
+##### **The overall accuracy of our external KNN classification model was 87.2%.** 
+##### **Given no information and guessing all classifications to be other Ales, accuracy was 56.5%**
+
+<div style="margin-bottom:20px;">
+</div>
+
+##### **The sensitivity, or the model's ability to accurately classify other Ales, was 87.5%.** 
+##### **The specificity, or the model's ability to accurately classify IPAs, was 86.7%.** 
+
+<div style="margin-bottom:20px;">
+</div>
+
+##### *Additional methods of investigating this relation were not included in the presentation due to time constraints.* 
+##### *To view them, please scroll down to the end of this file.* 
+
+
+<div style="margin-bottom:100px;">
+</div>
+
+### *Question of Interest 9*
+##### What are some additional insights from exploring the data? 
+```{r Q9}
+# We create a summary of the data to view information by State.
+# Please note that we did not use all the summarized variables in our final analyses.
+AlesSummary <- Ales %>% 
+  group_by(State) %>% 
+  summarize(medianABV = median(ABV),
+            medianIBU = median(IBU),
+            AleToIPA = sum(BeerType == 'Ale')/sum(BeerType == 'IPA'),
+            IPAToAle = sum(BeerType == 'IPA')/sum(BeerType == 'Ale'),
+            AlePercent = sum(BeerType == 'Ale')/sum(grepl('IPA|Ale',BeerType)),
+            IPAPercent = sum(BeerType == 'IPA')/sum(grepl('IPA|Ale',BeerType))
+            ) %>% 
+  mutate(State = str_replace_all(State,'\\s+',''))
+```
+
+```{r}
+# We retrieve a dataframe delineating the boundaries of each US state and change state names to be lowercase.
+# This is preparation to join it with our dataframe created above.
+states <- map_data("state") %>% 
+  mutate(State = state.abb[match(region,tolower(state.name))])
+
+# We join the data to our summary dataframe above.
+map.df <- full_join(states, AlesSummary, by = 'State')
+map.df <- map.df[order(map.df$order),]
+```
+
+```{r warnings = FALSE}
+# We plot the data onto a heatmap, filling states based on the percentage of Ales to IPAs. 
+map.df %>% 
+  ggplot(aes(x=long,y=lat,group=group))+
+  geom_polygon(aes(fill=AlePercent))+
+  geom_path()+ 
+  scale_fill_gradientn(colours=rev(heat.colors(10)),na.value="grey90")+
+  coord_map() + 
+  ggtitle("Percentage of Ales (to IPA)") + 
+  labs(fill = "Percent of Ales")
+```
+
+```{r warnings = FALSE}
+# We plot the data onto a heatmap, filling states based on the percentage of IPAs to Ales. 
+map.df %>% 
+  ggplot(aes(x=long,y=lat,group=group))+
+  geom_polygon(aes(fill=IPAPercent))+
+  geom_path()+ 
+  scale_fill_gradientn(colours=rev(heat.colors(10)),na.value="grey90")+
+  coord_map() + 
+  ggtitle("Percentage of IPAs (to Ales)") + 
+  labs(fill = "Percent of IPAs")
+```
+
+<div style="margin-bottom:50px;">
+</div>
+
+## **Conclusion**
+
+<div style="margin-bottom:20px;">
+</div>
+
+##### **We found that alcohol by volume (ABV) and the international bitterness units (IBU) are important to consider in the context of beers. They also appear to be key factors in determining the difference between IPAs and other types of ales, which may imply that the process from brewing beers to distributing the finalized products for sale should take ABV and IBU into consideration. It is important to note that more data is needed to make such claims. We only mean to highlight to potential importance of ABV and IBU and speculations as to what it could provide.** 
+
+<div style="margin-bottom:20px;">
+</div>
+
+##### **We also found that the proportion of IPAs and other ales across the USA differ by state. Although we have no information on the sales, this finding gives us a clue as to where IPAs are more prevalent. However, what this means in terms of action plans is inconclusive. This may serve as a lead for more questions and what other data we should explore for further insights.** 
+
+<div style="margin-bottom:100px;">
+</div>
+
+### Additional Methods (not included in the presentation due to time constraints)
+```{r}
+# T-Test
+Ales %>% 
+  group_by(BeerType) %>% 
+  summarize(Count = n(),
+            MeanABV = mean(ABV),
+            SdABV = sd(ABV),
+            MeanIBU = mean(IBU),
+            SdIBU = sd(IBU))
+
+Ales %>% filter(BeerType == 'IPA') %>% 
+  ggplot(aes(x = ABV)) + geom_histogram()
+
+t.test(Ales$ABV ~ Ales$BeerType)
+t.test(Ales$IBU ~ Ales$BeerType)
+```
+
+```{r}
+# Internal KNN
+set.seed(50)
+internalmodel <- knn.cv(Ales[c('ABV','IBU')], cl = Ales$BeerType, k = 3)
+confusionMatrix(table(internalmodel,Ales$BeerType))
+
+iiterations = 50
+inumks = 30
+
+imasterAcc = matrix(nrow = iiterations, ncol = inumks)
+
+# Internal KNN Cross-Validation
+for(j in 1:iiterations) {
+  for(i in 1:inumks) {
+    CM = confusionMatrix(table(knn.cv(Ales[,c('ABV','IBU')],Ales$BeerType, k = i),Ales$BeerType))
+    imasterAcc[j,i] = CM$overall[1]
+  }
+}
+
+iMeanAcc = colMeans(imasterAcc)
+plot(seq(1,inumks,1),iMeanAcc, type = "l")
+
+which.max(iMeanAcc) # which inumks is max?
+max(iMeanAcc)
+
+set.seed(50)
+confusionMatrix(table(knn.cv(Ales[,c('ABV','IBU')],Ales$BeerType, k = 8),Ales$BeerType))
+```
+
+```{r}
+# Naive-Bayes
+nbtrainIndices = sample(1:dim(Ales)[1],round(0.7 * dim(Ales)[1]))
+nbtrain = Ales[nbtrainIndices,]
+nbtest = Ales[-nbtrainIndices,]
+nbmodel = naiveBayes(nbtrain[,c('ABV','IBU')],nbtrain$BeerType)
+confusionMatrix(table(predict(nbmodel,nbtest[,c('ABV','IBU')]),nbtest$BeerType))
+
+nbiterations = 50
+nbmasterAcc = matrix(nrow = nbiterations)
+
+for(j in 1:nbiterations) {
+  nbtrainIndices = sample(1:dim(Ales)[1],round(0.7 * dim(Ales)[1]))
+  nbtrain = Ales[nbtrainIndices,]
+  nbtest = Ales[-nbtrainIndices,]
+  
+  nbmodel = naiveBayes(nbtrain[,c('ABV','IBU')],nbtrain$BeerType)
+  CM = confusionMatrix(table(predict(nbmodel,nbtest[,c('ABV','IBU')]),nbtest$BeerType))
+  nbmasterAcc[j] = CM$overall[1]
+}
+
+nbMeanAcc = colMeans(nbmasterAcc)
+nbMeanAcc
+```
+
+
+
