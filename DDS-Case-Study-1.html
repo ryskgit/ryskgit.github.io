@@ -238,7 +238,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">MSDS Projects</a>
+      <a class="navbar-brand" href="index.html">My Projects</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -415,7 +415,7 @@ MedBrew %&gt;%
   theme_classic() +
   theme(legend.position = &quot;none&quot;) +
   coord_flip()</code></pre>
-<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <pre class="r"><code># We conduct the same conversion to the State variable but with median IBU. 
 # As above, we pipe in the dataframe and plot using ggplot(). 
 MedBrew %&gt;% 
@@ -428,7 +428,7 @@ MedBrew %&gt;%
   theme_classic() + 
   theme(legend.position = &quot;none&quot;) +
   coord_flip()</code></pre>
-<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <div style="margin-bottom:100px;">
 
 </div>
@@ -492,7 +492,7 @@ BrewClean %&gt;%
   labs(y = &#39;Count&#39;) +
   ggtitle(&quot;Distribution ABV Levels&quot;) + 
   theme_minimal()</code></pre>
-<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <pre class="r"><code># We also provide a boxplot. 
 BrewClean %&gt;% 
   ggplot(aes(x = ABV)) + 
@@ -500,7 +500,7 @@ BrewClean %&gt;%
   #coord_cartesian(xlim=c(-0.5,0.5)) + 
   ggtitle(&#39;Distribution of ABV&#39;) + 
   theme_minimal()</code></pre>
-<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <div style="margin-bottom:20px;">
 
 </div>
@@ -609,7 +609,7 @@ for(j in 1:iterations) {
 
 MeanAcc = colMeans(masterAcc)
 plot(seq(1,numks,1),MeanAcc, type = &quot;l&quot;)</code></pre>
-<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <pre class="r"><code>which.max(MeanAcc) # Which inumks is max?</code></pre>
 <pre><code>## [1] 5</code></pre>
 <pre class="r"><code>max(MeanAcc)</code></pre>
@@ -686,7 +686,7 @@ map.df %&gt;%
   ggtitle(&quot;Percentage of Ales (to IPA)&quot;) + 
   labs(fill = &quot;Percent of Ales&quot;)</code></pre>
 <pre><code>## Warning: Removed 3 row(s) containing missing values (geom_path).</code></pre>
-<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <pre class="r"><code># We plot the data onto a heatmap, filling states based on the percentage of IPAs to Ales. 
 map.df %&gt;% 
   ggplot(aes(x=long,y=lat,group=group))+
@@ -697,7 +697,7 @@ map.df %&gt;%
   ggtitle(&quot;Percentage of IPAs (to Ales)&quot;) + 
   labs(fill = &quot;Percent of IPAs&quot;)</code></pre>
 <pre><code>## Warning: Removed 3 row(s) containing missing values (geom_path).</code></pre>
-<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <div style="margin-bottom:50px;">
 
 </div>
@@ -739,7 +739,7 @@ Ales %&gt;%
 <pre class="r"><code>Ales %&gt;% filter(BeerType == &#39;IPA&#39;) %&gt;% 
   ggplot(aes(x = ABV)) + geom_histogram()</code></pre>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <pre class="r"><code>t.test(Ales$ABV ~ Ales$BeerType)</code></pre>
 <pre><code>## 
 ##  Welch Two Sample t-test
@@ -810,7 +810,7 @@ for(j in 1:iiterations) {
 
 iMeanAcc = colMeans(imasterAcc)
 plot(seq(1,inumks,1),iMeanAcc, type = &quot;l&quot;)</code></pre>
-<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="DDS-Case-Study-1_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <pre class="r"><code>which.max(iMeanAcc) # which inumks is max?</code></pre>
 <pre><code>## [1] 8</code></pre>
 <pre class="r"><code>max(iMeanAcc)</code></pre>
