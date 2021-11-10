@@ -12,4 +12,4 @@ output: html_document
 ### Work: Data Analyst at The Center for Integrative Counseling and Psychology
 ### School: Online MSDS Program at SMU
 
-#### **Check out the other tabs to see my completed projects for the MSDS program**
+#### *Check out the other tabs to see my completed projects for the MSDS program*
