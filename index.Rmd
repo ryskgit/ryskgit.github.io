@@ -15,3 +15,5 @@ output: html_document
 #### *Check out the other tabs to see my completed projects for the MSDS program*
 
 [kNN Classification](https://richkim.shinyapps.io/CreditShiny/)
+
+[Beers Data](https://richkim.shinyapps.io/BeersShiny/)
