@@ -248,7 +248,9 @@ $(document).ready(function () {
 <li>
   <a href="DDS-Case-Study-1.html">Case Study 1</a>
 </li>
-<li class="dropdown-header">CLT2</li>
+<li>
+  <a href="CLT2.html">CLT2</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -364,35 +366,21 @@ Breweries %&gt;%
 BrewBeer &lt;- full_join(Beers, Breweries, by = c(&#39;Brewery_id&#39;=&#39;Brew_ID&#39;))</code></pre>
 <pre class="r"><code># We use head() and tail() to specify the top and bottom six observations of the merged dataframe. 
 head(BrewBeer, 6)</code></pre>
-<pre><code>##                Name.x Beer_ID   ABV IBU Brewery_id
-## 1            Pub Beer    1436 0.050  NA        409
-## 2         Devil&#39;s Cup    2265 0.066  NA        178
-## 3 Rise of the Phoenix    2264 0.071  NA        178
-## 4            Sinister    2263 0.090  NA        178
-## 5       Sex and Candy    2262 0.075  NA        178
-## 6        Black Exodus    2261 0.077  NA        178
-##                            Style Ounces                    Name.y City State
-## 1            American Pale Lager     12 10 Barrel Brewing Company Bend    OR
-## 2        American Pale Ale (APA)     12       18th Street Brewery Gary    IN
-## 3                   American IPA     12       18th Street Brewery Gary    IN
-## 4 American Double / Imperial IPA     12       18th Street Brewery Gary    IN
-## 5                   American IPA     12       18th Street Brewery Gary    IN
-## 6                  Oatmeal Stout     12       18th Street Brewery Gary    IN</code></pre>
+<pre><code>##                Name.x Beer_ID   ABV IBU Brewery_id                          Style Ounces                    Name.y City State
+## 1            Pub Beer    1436 0.050  NA        409            American Pale Lager     12 10 Barrel Brewing Company Bend    OR
+## 2         Devil&#39;s Cup    2265 0.066  NA        178        American Pale Ale (APA)     12       18th Street Brewery Gary    IN
+## 3 Rise of the Phoenix    2264 0.071  NA        178                   American IPA     12       18th Street Brewery Gary    IN
+## 4            Sinister    2263 0.090  NA        178 American Double / Imperial IPA     12       18th Street Brewery Gary    IN
+## 5       Sex and Candy    2262 0.075  NA        178                   American IPA     12       18th Street Brewery Gary    IN
+## 6        Black Exodus    2261 0.077  NA        178                  Oatmeal Stout     12       18th Street Brewery Gary    IN</code></pre>
 <pre class="r"><code>tail(BrewBeer, 6)</code></pre>
-<pre><code>##                           Name.x Beer_ID   ABV IBU Brewery_id
-## 2405 Rocky Mountain Oyster Stout    1035 0.075  NA        425
-## 2406                   Belgorado     928 0.067  45        425
-## 2407               Rail Yard Ale     807 0.052  NA        425
-## 2408             B3K Black Lager     620 0.055  NA        425
-## 2409         Silverback Pale Ale     145 0.055  40        425
-## 2410        Rail Yard Ale (2009)      84 0.052  NA        425
-##                         Style Ounces                  Name.y   City State
-## 2405           American Stout     12 Wynkoop Brewing Company Denver    CO
-## 2406              Belgian IPA     12 Wynkoop Brewing Company Denver    CO
-## 2407 American Amber / Red Ale     12 Wynkoop Brewing Company Denver    CO
-## 2408              Schwarzbier     12 Wynkoop Brewing Company Denver    CO
-## 2409  American Pale Ale (APA)     12 Wynkoop Brewing Company Denver    CO
-## 2410 American Amber / Red Ale     12 Wynkoop Brewing Company Denver    CO</code></pre>
+<pre><code>##                           Name.x Beer_ID   ABV IBU Brewery_id                    Style Ounces                  Name.y   City State
+## 2405 Rocky Mountain Oyster Stout    1035 0.075  NA        425           American Stout     12 Wynkoop Brewing Company Denver    CO
+## 2406                   Belgorado     928 0.067  45        425              Belgian IPA     12 Wynkoop Brewing Company Denver    CO
+## 2407               Rail Yard Ale     807 0.052  NA        425 American Amber / Red Ale     12 Wynkoop Brewing Company Denver    CO
+## 2408             B3K Black Lager     620 0.055  NA        425              Schwarzbier     12 Wynkoop Brewing Company Denver    CO
+## 2409         Silverback Pale Ale     145 0.055  40        425  American Pale Ale (APA)     12 Wynkoop Brewing Company Denver    CO
+## 2410        Rail Yard Ale (2009)      84 0.052  NA        425 American Amber / Red Ale     12 Wynkoop Brewing Company Denver    CO</code></pre>
 <div style="margin-bottom:100px;">
 
 </div>
@@ -457,10 +445,10 @@ MedBrew %&gt;%
 # We then pull the State value that is placed in that index. 
 BrewClean$State[grep(max(BrewClean$ABV),BrewClean$ABV)]</code></pre>
 <pre><code>## [1]  KY
-## 51 Levels:  AK  AL  AR  AZ  CA  CO  CT  DC  DE  FL  GA  HI  IA  ID  IL ...  WY</code></pre>
+## 51 Levels:  AK  AL  AR  AZ  CA  CO  CT  DC  DE  FL  GA  HI  IA  ID  IL  IN  KS  KY  LA  MA  MD  ME  MI  MN  MO  MS  MT  NC  ND ...  WY</code></pre>
 <pre class="r"><code>BrewClean$State[grep(max(BrewClean$IBU),BrewClean$IBU)]</code></pre>
 <pre><code>## [1]  OR
-## 51 Levels:  AK  AL  AR  AZ  CA  CO  CT  DC  DE  FL  GA  HI  IA  ID  IL ...  WY</code></pre>
+## 51 Levels:  AK  AL  AR  AZ  CA  CO  CT  DC  DE  FL  GA  HI  IA  ID  IL  IN  KS  KY  LA  MA  MD  ME  MI  MN  MO  MS  MT  NC  ND ...  WY</code></pre>
 <pre class="r"><code># We also conduct a check by sorting the dataframe and looking at the top values ourselves. 
 # We filter the variables to ABV, IBU, and State only for easier viewing.
 BrewClean %&gt;% arrange(desc(ABV)) %&gt;% dplyr::select(ABV, IBU, State) %&gt;% head(3)</code></pre>
@@ -484,38 +472,22 @@ BrewClean %&gt;% arrange(desc(ABV)) %&gt;% dplyr::select(ABV, IBU, State) %&gt;%
 <h5>What are the summary statistics and distribution of ABV?</h5>
 <pre class="r"><code># We look at the summary statistics for the dataframe. 
 summary(BrewClean)</code></pre>
-<pre><code>##                     Name.x        Beer_ID          ABV         
-##  Nonstop Hef Hop       :  12   Min.   :   1   Min.   :0.02700  
-##  Dale&#39;s Pale Ale       :   6   1st Qu.: 772   1st Qu.:0.05000  
-##  Longboard Island Lager:   4   Median :1439   Median :0.05700  
-##  1327 Pod&#39;s ESB        :   3   Mean   :1415   Mean   :0.05991  
-##  Boston Lager          :   3   3rd Qu.:2069   3rd Qu.:0.06800  
-##  Dagger Falls IPA      :   3   Max.   :2692   Max.   :0.12500  
-##  (Other)               :1374                                   
-##       IBU           Brewery_id                               Style    
-##  Min.   :  4.00   Min.   :  1.0   American IPA                  :301  
-##  1st Qu.: 21.00   1st Qu.: 95.0   American Pale Ale (APA)       :153  
-##  Median : 35.00   Median :198.0   American Amber / Red Ale      : 77  
-##  Mean   : 42.71   Mean   :224.2   American Double / Imperial IPA: 75  
-##  3rd Qu.: 64.00   3rd Qu.:351.0   American Blonde Ale           : 61  
-##  Max.   :138.00   Max.   :547.0   American Pale Wheat Ale       : 61  
-##                                   (Other)                       :677  
-##      Ounces                           Name.y               City     
-##  Min.   : 8.40   Oskar Blues Brewery     :  32   Portland    :  41  
-##  1st Qu.:12.00   Sun King Brewing Company:  32   Indianapolis:  36  
-##  Median :12.00   Sixpoint Craft Ales     :  23   San Diego   :  35  
-##  Mean   :13.51   Hopworks Urban Brewery  :  22   Brooklyn    :  28  
-##  3rd Qu.:16.00   Great Crescent Brewery  :  20   Boulder     :  26  
-##  Max.   :32.00   Stevens Point Brewery   :  20   Aurora      :  24  
-##                  (Other)                 :1256   (Other)     :1215  
-##      State    
-##   CO    :146  
-##   CA    :135  
-##   IN    : 91  
-##   TX    : 89  
-##   OR    : 87  
-##   MA    : 51  
-##  (Other):806</code></pre>
+<pre><code>##                     Name.x        Beer_ID          ABV               IBU           Brewery_id                               Style    
+##  Nonstop Hef Hop       :  12   Min.   :   1   Min.   :0.02700   Min.   :  4.00   Min.   :  1.0   American IPA                  :301  
+##  Dale&#39;s Pale Ale       :   6   1st Qu.: 772   1st Qu.:0.05000   1st Qu.: 21.00   1st Qu.: 95.0   American Pale Ale (APA)       :153  
+##  Longboard Island Lager:   4   Median :1439   Median :0.05700   Median : 35.00   Median :198.0   American Amber / Red Ale      : 77  
+##  1327 Pod&#39;s ESB        :   3   Mean   :1415   Mean   :0.05991   Mean   : 42.71   Mean   :224.2   American Double / Imperial IPA: 75  
+##  Boston Lager          :   3   3rd Qu.:2069   3rd Qu.:0.06800   3rd Qu.: 64.00   3rd Qu.:351.0   American Blonde Ale           : 61  
+##  Dagger Falls IPA      :   3   Max.   :2692   Max.   :0.12500   Max.   :138.00   Max.   :547.0   American Pale Wheat Ale       : 61  
+##  (Other)               :1374                                                                     (Other)                       :677  
+##      Ounces                           Name.y               City          State    
+##  Min.   : 8.40   Oskar Blues Brewery     :  32   Portland    :  41    CO    :146  
+##  1st Qu.:12.00   Sun King Brewing Company:  32   Indianapolis:  36    CA    :135  
+##  Median :12.00   Sixpoint Craft Ales     :  23   San Diego   :  35    IN    : 91  
+##  Mean   :13.51   Hopworks Urban Brewery  :  22   Brooklyn    :  28    TX    : 89  
+##  3rd Qu.:16.00   Great Crescent Brewery  :  20   Boulder     :  26    OR    : 87  
+##  Max.   :32.00   Stevens Point Brewery   :  20   Aurora      :  24    MA    : 51  
+##                  (Other)                 :1256   (Other)     :1215   (Other):806</code></pre>
 <pre class="r"><code># We use ggplot() to retrieve a histogram of the ABV distribution. 
 BrewClean %&gt;% 
   ggplot(aes(x = ABV)) + 
