@@ -13,3 +13,5 @@ output: html_document
 ### School: Online MSDS Program at SMU
 
 #### *Check out the other tabs to see my completed projects for the MSDS program*
+
+[kNN Classification](https://richkim.shinyapps.io/CreditShiny/)
