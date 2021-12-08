@@ -8,3 +8,5 @@ navbar:
       href: DDS-Case-Study-1.html
     - text: "CLT2"
       href: CLT2.html
+    - text: "Case Study 2"
+      href: DDS_Project2.html

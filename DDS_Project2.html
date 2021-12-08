@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Richard Kim" />
+
+<meta name="date" content="2021-12-01" />
+
+<title>Case Study 2</title>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Projects</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">About Me</a>
+</li>
+<li>
+  <a href="DDS-Case-Study-1.html">Case Study 1</a>
+</li>
+<li>
+  <a href="CLT2.html">CLT2</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Case Study 2</h1>
+<h4 class="author">Richard Kim</h4>
+<h4 class="date">12/01/2021</h4>
+
+</div>
+
+
+<div style="margin-bottom:50px;">
+
+</div>
+<div id="introduction" class="section level2">
+<h2><strong>Introduction</strong></h2>
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="the-purpose-of-this-project-is-to-identify-the-top-predictive-factors-that-lead-to-employee-turnover-at-ddsanalytics.-in-pursuit-of-this-goal-and-in-hopes-of-using-income-as-a-predictor-for-attrition-we-also-investigate-predictive-models-for-employees-monthly-incomes.-as-a-final-step-for-this-project-we-build-a-classification-model-to-reliably-predict-attrition-among-employees-in-the-company." class="section level5">
+<h5><strong>The purpose of this project is to identify the top predictive factors that lead to employee turnover at DDSAnalytics. In pursuit of this goal, and in hopes of using income as a predictor for attrition, we also investigate predictive models for employees’ monthly incomes. As a final step for this project, we build a classification model to reliably predict attrition among employees in the company.</strong></h5>
+<div style="margin-bottom:20px;">
+
+</div>
+<p><a href="https://www.youtube.com/watch?v=d6D1n1mXg5M">Presentation Link</a></p>
+<div style="margin-bottom:50px;">
+
+</div>
+</div>
+</div>
+<div id="setting-up" class="section level2">
+<h2><strong>Setting up</strong></h2>
+<div id="loading-necessary-libraries" class="section level3">
+<h3><em>Loading necessary libraries</em></h3>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.6.3</code></pre>
+<pre class="r"><code>library(ggplot2)
+library(ggthemes)</code></pre>
+<pre><code>## Warning: package &#39;ggthemes&#39; was built under R version 3.6.3</code></pre>
+<pre class="r"><code>library(openxlsx)</code></pre>
+<pre><code>## Warning: package &#39;openxlsx&#39; was built under R version 3.6.3</code></pre>
+<pre class="r"><code>library(class) #knn</code></pre>
+<pre><code>## Warning: package &#39;class&#39; was built under R version 3.6.3</code></pre>
+<pre class="r"><code>library(e1071) #naive-bayes
+library(caret) #confusion matrix</code></pre>
+<pre><code>## Warning: package &#39;caret&#39; was built under R version 3.6.3</code></pre>
+<pre class="r"><code># Reading the data into two different dataframes. Be sure to modify the directories accordingly. 
+NoAttrition &lt;- read.csv(&quot;D:\\Shared Lenovo\\Data Science\\Semester 1\\Doing Data Science\\Unit 14+15 - DDS Project 2\\CaseStudy2CompSet No Attrition.csv&quot;)
+
+NoSalary &lt;- read.xlsx(&quot;D:\\Shared Lenovo\\Data Science\\Semester 1\\Doing Data Science\\Unit 14+15 - DDS Project 2\\CaseStudy2CompSet No Salary.xlsx&quot;)</code></pre>
+<div style="margin-bottom:100px;">
+
+</div>
+</div>
+</div>
+<div id="linear-regression---for-salary-prediction" class="section level2">
+<h2><strong>Linear Regression - For Salary Prediction</strong></h2>
+<div id="setting-up-new-variables" class="section level3">
+<h3>Setting up new variables</h3>
+<pre class="r"><code># Creating a new variable to dichotomize job roles
+NewNoAttrition &lt;- NoAttrition %&gt;% 
+  mutate(RD_Manager0 = ifelse(grepl(&#39;Research Director|Manager&#39;,JobRole),0,1))
+
+NewNoSalary &lt;- NoSalary %&gt;% 
+  mutate(RD_Manager0 = ifelse(grepl(&#39;Research Director|Manager&#39;,JobRole),0,1))</code></pre>
+</div>
+<div id="plotting-job-roles" class="section level3">
+<h3>Plotting Job Roles</h3>
+<pre class="r"><code># Distributions for Job Roles
+options(scipen = 999)
+
+NewNoAttrition %&gt;% 
+  ggplot(aes(y = JobRole, x = MonthlyIncome, fill = JobRole)) + 
+  geom_bar(stat = &quot;summary&quot;) + 
+  ggtitle(&quot;Monthly Income by Job Role&quot;) + 
+  labs(x = &#39;Monthly Income&#39;, y = &#39;Job Role&#39;, fill = &#39;Legend&#39;) + 
+  theme_pander()</code></pre>
+<pre><code>## No summary function supplied, defaulting to `mean_se()`</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>NewNoAttrition %&gt;% 
+  ggplot(aes(y = JobRole, x = YearsAtCompany, fill = JobRole)) + 
+  geom_bar(stat = &quot;summary&quot;) + 
+  ggtitle(&quot;Years with the Company by Job Role&quot;) + 
+  labs(x = &#39;Years&#39;, y = &#39;Job Roles&#39;, fill = &#39;Legend&#39;) + 
+  theme_pander()</code></pre>
+<pre><code>## No summary function supplied, defaulting to `mean_se()`</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code># Linear Regression to create a prediction model for monthly income
+fit &lt;- lm(MonthlyIncome ~ JobLevel*JobRole + TotalWorkingYears, data = NewNoAttrition)
+summary(fit)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = MonthlyIncome ~ JobLevel * JobRole + TotalWorkingYears, 
+##     data = NewNoAttrition)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2624.8  -730.5   -39.3   654.7  4323.1 
+## 
+## Coefficients:
+##                                        Estimate Std. Error t value
+## (Intercept)                             -314.71     929.12  -0.339
+## JobLevel                                3006.81     355.72   8.453
+## JobRoleHuman Resources                  -859.98    1337.51  -0.643
+## JobRoleLaboratory Technician            2019.39    1052.84   1.918
+## JobRoleManager                          3893.94    1698.41   2.293
+## JobRoleManufacturing Director           -873.86    1266.71  -0.690
+## JobRoleResearch Director                2615.63    2257.71   1.159
+## JobRoleResearch Scientist               1911.46    1037.75   1.842
+## JobRoleSales Executive                  -181.07    1102.55  -0.164
+## JobRoleSales Representative              339.88    1665.90   0.204
+## TotalWorkingYears                         44.73      13.60   3.290
+## JobLevel:JobRoleHuman Resources          339.29     677.44   0.501
+## JobLevel:JobRoleLaboratory Technician  -2062.97     525.35  -3.927
+## JobLevel:JobRoleManager                 -107.97     473.40  -0.228
+## JobLevel:JobRoleManufacturing Director   170.28     491.21   0.347
+## JobLevel:JobRoleResearch Director        148.57     581.13   0.256
+## JobLevel:JobRoleResearch Scientist     -2065.22     499.64  -4.133
+## JobLevel:JobRoleSales Executive           66.53     425.68   0.156
+## JobLevel:JobRoleSales Representative    -764.23    1274.23  -0.600
+##                                                   Pr(&gt;|t|)    
+## (Intercept)                                       0.735076    
+## JobLevel                               0.00000000000000156 ***
+## JobRoleHuman Resources                            0.520771    
+## JobRoleLaboratory Technician                      0.056118 .  
+## JobRoleManager                                    0.022605 *  
+## JobRoleManufacturing Director                     0.490851    
+## JobRoleResearch Director                          0.247630    
+## JobRoleResearch Scientist                         0.066539 .  
+## JobRoleSales Executive                            0.869669    
+## JobRoleSales Representative                       0.838484    
+## TotalWorkingYears                                 0.001129 ** 
+## JobLevel:JobRoleHuman Resources                   0.616873    
+## JobLevel:JobRoleLaboratory Technician             0.000108 ***
+## JobLevel:JobRoleManager                           0.819764    
+## JobLevel:JobRoleManufacturing Director            0.729115    
+## JobLevel:JobRoleResearch Director                 0.798397    
+## JobLevel:JobRoleResearch Scientist     0.00004721450317899 ***
+## JobLevel:JobRoleSales Executive                   0.875907    
+## JobLevel:JobRoleSales Representative              0.549152    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1161 on 281 degrees of freedom
+## Multiple R-squared:  0.9549, Adjusted R-squared:  0.952 
+## F-statistic: 330.6 on 18 and 281 DF,  p-value: &lt; 0.00000000000000022</code></pre>
+<pre class="r"><code># Checking Violations of Assumptions
+hist(fit$residuals)</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>plot(fit)</code></pre>
+<pre><code>## Warning: not plotting observations with leverage one:
+##   271</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-6-2.png" width="672" /><img src="DDS_Project2_files/figure-html/unnamed-chunk-6-3.png" width="672" /></p>
+<pre><code>## Warning: not plotting observations with leverage one:
+##   271</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-6-4.png" width="672" /><img src="DDS_Project2_files/figure-html/unnamed-chunk-6-5.png" width="672" /></p>
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="the-plot-of-the-residuals-indicate-that-the-data-are-mostly-homoscedastic.-we-attempted-some-transformations-with-our-variables-to-resolve-the-greater-spread-around-5000-along-the-x-axis.-unsuccessful-we-concluded-that-it-is-reasonable-to-proceed-as-is.-though-the-final-plot-of-the-standardized-residuals-show-that-there-are-a-few-datapoints-with-high-leverage-they-do-not-appear-to-be-influential-points.-the-qq-plot-indicates-some-aberration-from-normality.-however-given-the-large-sample-size-of-300-we-choose-to-continue-with-this-model-with-no-modifications." class="section level4">
+<h4><strong>The plot of the residuals indicate that the data are mostly homoscedastic. We attempted some transformations with our variables to resolve the greater spread around 5000 along the x-axis. Unsuccessful, we concluded that it is reasonable to proceed as is. Though the final plot of the standardized residuals show that there are a few datapoints with high leverage, they do not appear to be influential points. The QQ plot indicates some aberration from normality. However, given the large sample size of 300, we choose to continue with this model with no modifications.</strong></h4>
+<div style="margin-bottom:30px;">
+
+</div>
+<pre class="r"><code>NewNoAttrition %&gt;% 
+  ggplot(aes(x = JobLevel, y = MonthlyIncome, color = JobRole)) + 
+  geom_point() + 
+  facet_wrap(~JobRole) + 
+  ggtitle(&#39;Job Level by Job Roles&#39;) + 
+  labs(y = &#39;Monthly Income&#39;, x = &#39;Job Level&#39;) + 
+  theme_minimal()</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>NewNoAttrition %&gt;% 
+  ggplot(aes(x = TotalWorkingYears, y = MonthlyIncome)) + 
+  geom_point(color = &#39;steelblue&#39;) + 
+  geom_smooth(method = &#39;lm&#39;) + 
+  ggtitle(&#39;Income by Years Worked&#39;) + 
+  labs(y = &#39;Monthly Income&#39;, x = &#39;Total Years Worked&#39;) + 
+  theme_pander()</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+</div>
+<div id="predict-salary" class="section level3">
+<h3>Predict Salary!</h3>
+<pre class="r"><code># Prediction Comparison
+preds = predict(fit, newdata = NewNoAttrition)
+
+# Checking predictions to actual income
+NoAttritionTestIncome &lt;- NewNoAttrition %&gt;% 
+  mutate(PredMonthlyIncome = preds) %&gt;% 
+  select(MonthlyIncome, PredMonthlyIncome)
+
+# Imputing NoSalary Dataframe (with Regression Model)
+incomepreds = predict(fit, newdata = NewNoSalary)
+
+SalaryResults &lt;- NewNoSalary %&gt;% 
+  mutate(PredictedSalary = incomepreds)</code></pre>
+<div style="margin-bottom:100px;">
+
+</div>
+</div>
+</div>
+<div id="naive-bayes---for-attrition-prediction" class="section level2">
+<h2><strong>Naive-Bayes - For Attrition Prediction</strong></h2>
+<div id="setting-up-new-variables-1" class="section level3">
+<h3>Setting up new variables</h3>
+<pre class="r"><code># Imputing NoSalary dataset with predicted income, then creating new variables for attrition
+NoSalaryPredictIncome &lt;- NewNoSalary %&gt;% 
+  mutate(MonthlyIncome = incomepreds,
+         Job_Cat = ifelse(grepl(&#39;Health|Manager&#39;,JobRole),0,
+                          ifelse(grepl(&#39;Research|Executive&#39;,JobRole),1,
+                                 ifelse(grepl(&#39;Resoources|Manufacturing&#39;,JobRole),2,
+                                        ifelse(grepl(&#39;Representative|Laboratory&#39;,JobRole),3,NA)))),
+         Educ_Cat = ifelse(grepl(&#39;Technical|Human&#39;,EducationField),0,
+                           ifelse(grepl(&#39;Marketing|Medical&#39;,EducationField),1,
+                                  ifelse(grepl(&#39;Life Sciences&#39;,EducationField),2,
+                                         ifelse(grepl(&#39;Other&#39;,EducationField),3,NA)))),
+         Marital_Cat = ifelse(grepl(&#39;Single&#39;,MaritalStatus),0,1),
+         Income_Cat = ifelse(MonthlyIncome &gt; 19000, 0,
+                             ifelse(MonthlyIncome &gt; 14000, 1, 
+                                    ifelse(MonthlyIncome &gt; 10000, 2, 
+                                           ifelse(MonthlyIncome &gt; 7000, 3,
+                                                  ifelse(MonthlyIncome &gt; 4000, 4, 5))))),
+         Sat_Cat = ifelse(JobSatisfaction == 1, 1, 0),
+         Prom_Cat = ifelse(YearsSinceLastPromotion &gt; 3, 1, 0),
+         WithManager = ifelse(YearsWithCurrManager == 0, 0, 1),
+         CurrRole = ifelse(YearsInCurrentRole &gt; 8, 0, 1))
+
+# Setting up NoAttrition dataset for later prediction
+NoAttritionPredictDropout &lt;- NewNoAttrition %&gt;% 
+  mutate(MonthlyIncome = incomepreds,
+         Job_Cat = ifelse(grepl(&#39;Health|Manager&#39;,JobRole),0,
+                          ifelse(grepl(&#39;Research|Executive&#39;,JobRole),1,
+                                 ifelse(grepl(&#39;Resoources|Manufacturing&#39;,JobRole),2,
+                                        ifelse(grepl(&#39;Representative|Laboratory&#39;,JobRole),3,NA)))),
+         Educ_Cat = ifelse(grepl(&#39;Technical|Human&#39;,EducationField),0,
+                           ifelse(grepl(&#39;Marketing|Medical&#39;,EducationField),1,
+                                  ifelse(grepl(&#39;Life Sciences&#39;,EducationField),2,
+                                         ifelse(grepl(&#39;Other&#39;,EducationField),3,NA)))),
+         Marital_Cat = ifelse(grepl(&#39;Single&#39;,MaritalStatus),0,1),
+         Income_Cat = ifelse(MonthlyIncome &gt; 19000, 0,
+                             ifelse(MonthlyIncome &gt; 14000, 1, 
+                                    ifelse(MonthlyIncome &gt; 10000, 2, 
+                                           ifelse(MonthlyIncome &gt; 7000, 3,
+                                                  ifelse(MonthlyIncome &gt; 4000, 4, 5))))),
+         Sat_Cat = ifelse(JobSatisfaction == 1, 1, 0),
+         Prom_Cat = ifelse(YearsSinceLastPromotion &gt; 3, 1, 0),
+         WithManager = ifelse(YearsWithCurrManager == 0, 0, 1),
+         CurrRole = ifelse(YearsInCurrentRole &gt; 8, 0, 1))</code></pre>
+</div>
+<div id="top-3-predictors" class="section level3">
+<h3>Top 3 Predictors</h3>
+<pre class="r"><code>NumericAttrition &lt;- NoSalaryPredictIncome %&gt;% 
+  mutate(Attrition = ifelse(Attrition == &#39;Yes&#39;,1,
+                            ifelse(Attrition == &#39;No&#39;,0,NA)))
+
+summary(lm(Attrition ~ WithManager + BusinessTravel + OverTime, data = NumericAttrition))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Attrition ~ WithManager + BusinessTravel + OverTime, 
+##     data = NumericAttrition)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.49889 -0.19728 -0.06365 -0.06365  0.93635 
+## 
+## Coefficients:
+##                                 Estimate Std. Error t value   Pr(&gt;|t|)    
+## (Intercept)                      0.14018    0.08666   1.618   0.106815    
+## WithManager                     -0.21309    0.05551  -3.839   0.000151 ***
+## BusinessTravelTravel_Frequently  0.27019    0.08399   3.217   0.001439 ** 
+## BusinessTravelTravel_Rarely      0.13656    0.07504   1.820   0.069784 .  
+## OverTimeYes                      0.22215    0.04631   4.797 0.00000256 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3484 on 295 degrees of freedom
+## Multiple R-squared:  0.1539, Adjusted R-squared:  0.1424 
+## F-statistic: 13.41 on 4 and 295 DF,  p-value: 0.0000000004694</code></pre>
+</div>
+<div id="plotting-classification-variables" class="section level3">
+<h3>Plotting Classification Variables</h3>
+<pre class="r"><code>NoSalaryPredictIncome %&gt;% 
+  group_by(OverTime) %&gt;% 
+  summarize(AttritionPercent = sum(Attrition == &#39;Yes&#39;)/n()) %&gt;% 
+  mutate(OverTime = factor(OverTime,
+                        levels = OverTime[order(AttritionPercent, decreasing = FALSE)])) %&gt;%
+  ggplot(aes(x = OverTime, y = AttritionPercent, alpha = AttritionPercent)) + 
+  geom_bar(stat = &#39;identity&#39;, fill = &#39;steelblue&#39;) + 
+  theme_minimal() + ylim(0.0,1.0) + 
+  ggtitle(&#39;Attrition by Overtime&#39;) + 
+  labs(y = &#39;Percent Attrition&#39;, x = &#39;Overtime Status&#39;, alpha = &#39;Percent Attrition&#39;)</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code>NoSalaryPredictIncome %&gt;% 
+  group_by(BusinessTravel) %&gt;% 
+  summarize(AttritionPercent = sum(Attrition == &#39;Yes&#39;)/n()) %&gt;% 
+  mutate(BusinessTravel = factor(BusinessTravel,
+                        levels = BusinessTravel[order(AttritionPercent, decreasing = FALSE)])) %&gt;%
+  ggplot(aes(x = BusinessTravel, y = AttritionPercent, alpha = AttritionPercent)) + 
+  geom_bar(stat = &#39;identity&#39;, fill = &#39;steelblue&#39;) + 
+  theme_minimal() + ylim(0.0,1.0) + 
+  ggtitle(&#39;Attrition by Frequency of Business Travel&#39;) + 
+  labs(x = &#39;Travel Frequency&#39;, y = &#39;Percent Attrition&#39;, alpha = &#39;Percent Attrition&#39;)</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<pre class="r"><code>NoSalaryPredictIncome %&gt;% 
+  ggplot(aes(x = YearsWithCurrManager, color = Attrition)) + 
+  geom_density() + 
+  theme_minimal() + 
+  ggtitle(&#39;Years With Current Manager&#39;) + 
+  labs(x = &#39;Years with Manager&#39;, y = &#39;Percent Attrition&#39;)</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<pre class="r"><code>NoSalaryPredictIncome %&gt;% 
+  group_by(MaritalStatus) %&gt;% 
+  summarize(AttritionPercent = sum(Attrition == &#39;Yes&#39;)/n()) %&gt;% 
+  mutate(MaritalStatus = factor(MaritalStatus,
+                        levels = MaritalStatus[order(AttritionPercent, decreasing = FALSE)])) %&gt;%
+  ggplot(aes(y = MaritalStatus, x = AttritionPercent, alpha = AttritionPercent)) + 
+  geom_bar(stat = &#39;identity&#39;, fill = &#39;steelblue&#39;) + 
+  theme_minimal() + xlim(0.0,1.0) + 
+  ggtitle(&#39;Attrition by Marital Status&#39;) + 
+  labs(x = &#39;Marital Status&#39;, y = &#39;Percent Attrition&#39;)</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<pre class="r"><code>NoSalaryPredictIncome %&gt;% 
+  group_by(EducationField) %&gt;% 
+  summarize(AttritionPercent = sum(Attrition == &#39;Yes&#39;)/n()) %&gt;% 
+  mutate(EducationField = factor(EducationField,
+                        levels = EducationField[order(AttritionPercent, decreasing = FALSE)])) %&gt;%
+  ggplot(aes(y = EducationField, x = AttritionPercent, alpha = AttritionPercent)) + 
+  geom_bar(stat = &#39;identity&#39;, fill = &#39;steelblue&#39;) + 
+  theme_minimal() + xlim(0.0,1.0) + 
+  ggtitle(&#39;Attrition by Education Field&#39;) + 
+  labs(x = &#39;Education Field&#39;, y = &#39;Percent Attrition&#39;)</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<pre class="r"><code>NoSalaryPredictIncome %&gt;% 
+  group_by(JobRole) %&gt;% 
+  summarize(AttritionPercent = sum(Attrition == &#39;Yes&#39;)/n()) %&gt;% 
+  mutate(JobRole = factor(JobRole,
+                        levels = JobRole[order(AttritionPercent, decreasing = FALSE)])) %&gt;%
+  ggplot(aes(y = JobRole, x = AttritionPercent, alpha = AttritionPercent)) + 
+  geom_bar(stat = &#39;identity&#39;, fill = &#39;steelblue&#39;) + 
+  theme_minimal() + xlim(0.0,1.0) + 
+  ggtitle(&#39;Attrition by Job Roles&#39;) + 
+  labs(x = &#39;Job Role&#39;, y = &#39;Percent Attrition&#39;)</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<pre class="r"><code>NoSalaryPredictIncome %&gt;% 
+  group_by(JobSatisfaction) %&gt;% 
+  summarize(AttritionPercent = sum(Attrition == &#39;Yes&#39;)/n()) %&gt;% 
+  mutate(JobSatisfaction = factor(JobSatisfaction,
+                        levels = JobSatisfaction[order(JobSatisfaction, decreasing = TRUE)])) %&gt;%
+  ggplot(aes(y = JobSatisfaction, x = AttritionPercent, alpha = AttritionPercent)) + 
+  geom_bar(stat = &#39;identity&#39;, fill = &#39;steelblue&#39;) + 
+  theme_minimal() + xlim(0.0,1.0) + 
+  ggtitle(&#39;Attrition by Job Satisfaction&#39;) + 
+  labs(x = &#39;Job Satisfaction&#39;, y = &#39;Percent Attrition&#39;)</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<pre class="r"><code>NoSalaryPredictIncome %&gt;% 
+  ggplot(aes(x = YearsSinceLastPromotion, color = Attrition)) + 
+  geom_density() + 
+  theme_minimal() + 
+  ggtitle(&#39;Years Since Promotion&#39;) + 
+  labs(x = &#39;Years&#39;, y = &#39;Percent Attrition&#39;)</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<pre class="r"><code>NoSalaryPredictIncome %&gt;% 
+  ggplot(aes(x = YearsInCurrentRole, color = Attrition)) + 
+  geom_density() + 
+  theme_minimal() + 
+  ggtitle(&#39;Years In Current Role&#39;) + 
+  labs(x = &#39;Years&#39;, y = &#39;Percent Attrition&#39;)</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+</div>
+<div id="test-classification-model-with-predicted-salary-as-a-predictor" class="section level3">
+<h3>Test Classification Model (with Predicted Salary as a Predictor)</h3>
+<pre class="r"><code># SETUP FOR ATTRITION PREDICTION
+
+# Naive-Bayes to predict attrition
+nbtrainIndices = sample(1:dim(NoSalaryPredictIncome)[1],round(0.7 * dim(NoSalaryPredictIncome)[1]))
+nbtrain = NoSalaryPredictIncome[nbtrainIndices,]
+nbtest = NoSalaryPredictIncome[-nbtrainIndices,]
+nbmodel = naiveBayes(nbtrain[,c(&#39;MonthlyIncome&#39;,&#39;Age&#39;,&#39;OverTime&#39;,&#39;Job_Cat&#39;,&#39;RD_Manager0&#39;,&#39;Educ_Cat&#39;,&#39;Marital_Cat&#39;,&#39;Income_Cat&#39;,&#39;BusinessTravel&#39;,&#39;Sat_Cat&#39;,&#39;Prom_Cat&#39;,&#39;WithManager&#39;,&#39;CurrRole&#39;)],nbtrain$Attrition)
+delete &lt;- confusionMatrix(table(predict(nbmodel,nbtest[,c(&#39;MonthlyIncome&#39;,&#39;Age&#39;,&#39;OverTime&#39;,&#39;Job_Cat&#39;,&#39;RD_Manager0&#39;,&#39;Educ_Cat&#39;,&#39;Marital_Cat&#39;,&#39;Income_Cat&#39;,&#39;BusinessTravel&#39;,&#39;Sat_Cat&#39;,&#39;Prom_Cat&#39;,&#39;WithManager&#39;,&#39;CurrRole&#39;)]),nbtest$Attrition))
+
+# Checking Accuracy, Sensitivity, and Specificity with Classification
+set.seed(100)
+nbiterations = 1000
+nbmasterAcc = matrix(nrow = nbiterations)
+nbmasterSens = matrix(nrow = nbiterations)
+nbmasterSpec = matrix(nrow = nbiterations)
+nbmasterNull = matrix(nrow = nbiterations)
+
+for(j in 1:nbiterations) {
+  nbtrainIndices = sample(1:dim(NoSalaryPredictIncome)[1],round(0.7 * dim(NoSalaryPredictIncome)[1]))
+  nbtrain = NoSalaryPredictIncome[nbtrainIndices,]
+  nbtest = NoSalaryPredictIncome[-nbtrainIndices,]
+  
+  nbmodel = naiveBayes(nbtrain[,c(&#39;MonthlyIncome&#39;,&#39;Age&#39;,&#39;OverTime&#39;,&#39;Job_Cat&#39;,&#39;Educ_Cat&#39;,&#39;Marital_Cat&#39;,&#39;Income_Cat&#39;,&#39;BusinessTravel&#39;,&#39;Sat_Cat&#39;,&#39;Prom_Cat&#39;,&#39;WithManager&#39;,&#39;CurrRole&#39;)],
+                       nbtrain$Attrition)
+  CM = confusionMatrix(table(predict(nbmodel,nbtest[,c(&#39;MonthlyIncome&#39;,&#39;Age&#39;,&#39;OverTime&#39;,&#39;Job_Cat&#39;,&#39;Educ_Cat&#39;,&#39;Marital_Cat&#39;,&#39;Income_Cat&#39;,&#39;BusinessTravel&#39;,&#39;Sat_Cat&#39;,&#39;Prom_Cat&#39;,&#39;WithManager&#39;,&#39;CurrRole&#39;)]),nbtest$Attrition))
+  nbmasterSens[j] = CM$byClass[1]
+  nbmasterSpec[j] = CM$byClass[2]
+  nbmasterAcc[j] = CM$overall[1]
+  nbmasterNull[j] = CM$overall[5]
+}
+
+colMeans(nbmasterAcc)</code></pre>
+<pre><code>## [1] 0.6647556</code></pre>
+<pre class="r"><code>colMeans(nbmasterSens)</code></pre>
+<pre><code>## [1] 0.6498444</code></pre>
+<pre class="r"><code>colMeans(nbmasterSpec)</code></pre>
+<pre><code>## [1] 0.7374486</code></pre>
+<pre class="r"><code>colMeans(nbmasterNull)</code></pre>
+<pre><code>## [1] 0.8294444</code></pre>
+<pre class="r"><code># No Information Rate is High. Why? 
+
+NoSalaryPredictIncome %&gt;% 
+  ggplot(aes(x = Attrition, fill = Attrition)) + 
+  geom_bar() + 
+  labs(y = &#39;Employees&#39;) + 
+  ggtitle(&#39;Attrition Count&#39;) + 
+  theme_pander() + 
+  scale_fill_manual(&quot;Legend&quot;, values = c(&quot;No&quot; = &quot;steelblue&quot;, &quot;Yes&quot; = &quot;dodgerblue4&quot;))</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="predict-attrition" class="section level3">
+<h3>Predict Attrition!</h3>
+<pre class="r"><code># Imputing NoAttrition Dataframe (with Regression Model)
+attpreds &lt;- predict(nbmodel, newdata = NoAttritionPredictDropout)
+
+AttritionResults &lt;- NewNoAttrition %&gt;% 
+  mutate(PredictedAttrition = attpreds)</code></pre>
+</div>
+</div>
+<div id="additional-material-was-not-included" class="section level2">
+<h2><strong>Additional Material (was not included)</strong></h2>
+<div id="knn-impute-attrition" class="section level3">
+<h3><em>KNN Impute Attrition</em></h3>
+<pre class="r"><code># Internal KNN
+internalmodel &lt;- knn.cv(NoSalaryPredictIncome[c(&#39;MonthlyIncome&#39;,&#39;Age&#39;)], 
+                        cl = NoSalaryPredictIncome$Attrition, k = 1)
+confusionMatrix(table(internalmodel,NoSalaryPredictIncome$Attrition))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##              
+## internalmodel  No Yes
+##           No  208  38
+##           Yes  41  13
+##                                          
+##                Accuracy : 0.7367         
+##                  95% CI : (0.683, 0.7856)
+##     No Information Rate : 0.83           
+##     P-Value [Acc &gt; NIR] : 1.000          
+##                                          
+##                   Kappa : 0.0882         
+##                                          
+##  Mcnemar&#39;s Test P-Value : 0.822          
+##                                          
+##             Sensitivity : 0.8353         
+##             Specificity : 0.2549         
+##          Pos Pred Value : 0.8455         
+##          Neg Pred Value : 0.2407         
+##              Prevalence : 0.8300         
+##          Detection Rate : 0.6933         
+##    Detection Prevalence : 0.8200         
+##       Balanced Accuracy : 0.5451         
+##                                          
+##        &#39;Positive&#39; Class : No             
+## </code></pre>
+<pre class="r"><code>iiterations = 50
+inumks = 30
+
+# Internal KNN Cross-Validation
+imasterAcc = matrix(nrow = iiterations, ncol = inumks)
+
+for(j in 1:iiterations) {
+  for(i in 1:inumks) {
+    CM = confusionMatrix(table(knn.cv(NoSalaryPredictIncome[,c(&#39;Age&#39;,&#39;DistanceFromHome&#39;,&#39;JobLevel&#39;,&#39;NumCompaniesWorked&#39;)],
+                                      NoSalaryPredictIncome$Attrition, k = i),NoSalaryPredictIncome$Attrition))
+    imasterAcc[j,i] = CM$overall[1]
+  }
+}
+
+iMeanAcc = colMeans(imasterAcc)
+plot(seq(1,inumks,1),iMeanAcc, type = &quot;l&quot;)</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<pre class="r"><code>which.max(iMeanAcc) # which inumks is max?</code></pre>
+<pre><code>## [1] 11</code></pre>
+<pre class="r"><code>max(iMeanAcc)</code></pre>
+<pre><code>## [1] 0.8351333</code></pre>
+<pre class="r"><code># For Specificity
+imasterSpec = matrix(nrow = iiterations, ncol = inumks)
+
+for(j in 1:iiterations) {
+  for(i in 1:inumks) {
+    CM = confusionMatrix(table(knn.cv(NoSalaryPredictIncome[,c(&#39;MonthlyIncome&#39;,&#39;Age&#39;,&#39;HourlyRate&#39;)],
+                                      NoSalaryPredictIncome$Attrition, k = i),NoSalaryPredictIncome$Attrition))
+    imasterSpec[j,i] = CM$byClass[2]
+  }
+}
+
+iMeanSpec = colMeans(imasterSpec)
+
+which.max(iMeanSpec) # which inumks is max?</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>max(iMeanSpec)</code></pre>
+<pre><code>## [1] 0.2941176</code></pre>
+<pre class="r"><code>plot(seq(1,inumks,1),iMeanSpec, type = &quot;l&quot;)</code></pre>
+<p><img src="DDS_Project2_files/figure-html/unnamed-chunk-25-2.png" width="672" /></p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
